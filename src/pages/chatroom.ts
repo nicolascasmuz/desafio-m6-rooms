@@ -10,7 +10,14 @@ customElements.define(
     constructor() {
       super();
       this.shadow = this.attachShadow({ mode: "open" });
+      this.addListeners();
       this.render();
+      state.signIn((err) => {
+        if (err) console.log("Hubo un error en el signIn");
+        state.askNewRoom(() => {
+          state.accessToRoom();
+        });
+      });
     }
     addListeners() {
       state.subscribe(() => {
@@ -47,14 +54,14 @@ customElements.define(
             <section class="chat-box__section">
                 ${this.messages
                   .map((m) => {
-                    return `
-                    <mymsg-div user-name=${this.userName} message=${m}></mymsg-div>`;
+                    return `<div class="user1__message-box"><p class="user1__message-text"><span class="user1__message-span">${this.userName}</span>${m}</p></div>` /* `
+                    <mymsg-comp user-name=${this.userName} message=${m}></mymsg-comp>` */;
                   })
                   .join("")}
             </section>
             <form class="chatroom-form__form">
               <input class="chatroom-form__input" type="text" name="new-message">
-              <button text="Enviar" class="chatroom-form__button">Enviar</button>
+              <button class="chatroom-form__button">Enviar</button>
             </form>
           </div>
         </div>

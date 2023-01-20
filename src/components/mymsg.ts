@@ -13,15 +13,17 @@ customElements.define(
       this.userName = this.getAttribute("user-name") || "";
       this.message = this.getAttribute("message") || "";
 
+      console.log("this.message: ", this.message);
+
       const div = document.createElement("div");
-      div.classList.add("mymsg-div");
+      div.classList.add("mymsg");
       div.innerHTML = `
-        <p class="msg-div__text"><span class="msg-div__span">${this.userName}</span>${this.message}</p>
+        <p class="mymsg__text"><span class="mymsg__span">${this.userName}</span>${this.message}</p>
       `;
 
       const style = document.createElement("style");
       style.innerHTML = `
-        .mymsg-div {
+        .mymsg {
           display: flex;
           justify-content: flex-end;
           align-items: center;
@@ -33,11 +35,11 @@ customElements.define(
           border-radius: 4px;
           padding: 6px;
         }
-        .mymsg-div__text {
+        .mymsg__text {
             align-text: right;
             margin: 0;
         }
-        .mymsg-div__span {
+        .mymsg__span {
             display: block;
             font-size: 12px;
             font-weight: 600;
