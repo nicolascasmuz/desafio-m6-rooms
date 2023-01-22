@@ -13,6 +13,7 @@ const state = {
     rtdbRoomId: "",
     existingRoom: "",
     messages: [],
+    from: "",
   },
   listeners: [],
   init() {
@@ -121,7 +122,6 @@ const state = {
 
     fetch(API_BASE_URL + "/rooms/" + cs.roomId + "?userId=" + cs.userId)
       .then((res) => {
-        console.log("accessToRoom 1: ", res);
         return res.json();
       })
       .then((data) => {
@@ -174,6 +174,14 @@ const state = {
       currentState.messages = messagesList;
       this.setState(currentState);
     });
+  },
+  setFrom(fromWho: string) {
+    const cs = this.getState();
+
+    /* cs.from = "Fulano"; */
+    cs.from = fromWho;
+
+    this.setState(cs);
   },
   /*   getRoom(roomId) {
     const currentState = this.getState();
@@ -251,8 +259,11 @@ const state = {
       body: JSON.stringify({
         rtdbRoomId: currentState.rtdbRoomId,
         owner: ownerName,
-        messages: message,
+        message: message,
+        from: currentState.fullname,
       }),
+    }).then((msg) => {
+      console.log("msg: ", msg);
     });
 
     this.setState(currentState);

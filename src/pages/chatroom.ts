@@ -44,6 +44,8 @@ customElements.define(
       });
     }
     render() {
+      const currentState = state.getState();
+
       const div = document.createElement("div");
       div.innerHTML = `
         <header class="red-header"></header>
@@ -54,8 +56,11 @@ customElements.define(
             <section class="chat-box__section">
                 ${this.messages
                   .map((m) => {
-                    return `<div class="user1__message-box"><p class="user1__message-text"><span class="user1__message-span">${this.userName}</span>${m}</p></div>` /* `
-                    <mymsg-comp user-name=${this.userName} message=${m}></mymsg-comp>` */;
+                    if (this.userName == currentState.from) {
+                      return `<div class="user1__message-box"><p class="user1__message-text"><span class="user1__message-span">${this.userName}</span>${m}</p></div>`;
+                    } else {
+                      return `<div class="user2__message-box"><p class="user2__message-text"><span class="user2__message-span">${this.userName}</span>${m}</p></div>`;
+                    }
                   })
                   .join("")}
             </section>
@@ -148,6 +153,12 @@ customElements.define(
             .user2__message-text {
               align-text: left;
               margin: 0;
+            }
+            .user2__message-span {
+              display: block;
+              font-size: 12px;
+              font-weight: 600;
+              text-align: left;
             }
             .chatroom-form__form {
               display: flex;

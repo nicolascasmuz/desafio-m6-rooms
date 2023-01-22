@@ -42,11 +42,8 @@ customElements.define(
         const userEmail = e.target["email"].value;
         const userName = e.target["name"].value;
 
-        const longUserId = nanoid();
-        const shortUserId = longUserId.slice(16);
-
-        /* state.setNewUser(longUserId, shortUserId, objEmailFullname); */
         state.setEmailAndFullname(userEmail, userName);
+        state.setFrom(userName);
 
         // SETEA EL ROOMID
         const selectEl = e.target["room-select"].value;
