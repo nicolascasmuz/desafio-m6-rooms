@@ -13,8 +13,9 @@ customElements.define(
       this.shadow = this.attachShadow({ mode: "open" });
       this.render();
     }
-    addListener() {}
     connectedCallback() {
+      const cs = state.getState();
+
       // DISPLAY DEL ROOM EXISTENTE
       const selectEl = this.shadow.querySelector(
         ".signin-form__select-room"
@@ -117,12 +118,12 @@ customElements.define(
           inputRoomidVal.length == 5 &&
           userEmail != "" &&
           userName != "" &&
-          state.getState().existingRoom == false
+          cs.existingRoom == false
         ) {
           existingRoomInput.style.border = "solid 2px red";
           inputEmailEl.style.border = "solid 2px #8c8c8c";
           inputNameEl.style.border = "solid 2px #8c8c8c";
-        } else if (state.getState().existingRoom == true) {
+        } else if (cs.existingRoom == true) {
           Router.go("/chatroom");
         } else if (selectEl == "new-room") {
           Router.go("/chatroom");

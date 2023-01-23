@@ -45,7 +45,7 @@ const state = {
 
     this.setState(cs);
   },
-  signIn(callback) {
+  /* signUp(callback) {
     const cs = this.getState();
 
     if (cs.email) {
@@ -55,6 +55,30 @@ const state = {
           "content-type": "application/json",
         },
         body: JSON.stringify({ email: cs.email }),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          cs.userId = data.id;
+          this.setState(cs);
+          callback();
+        });
+    } else {
+      console.error("No hay un email en el state");
+      callback(true);
+    }
+  }, */
+  signIn(callback) {
+    const cs = this.getState();
+
+    if (cs.email) {
+      fetch(API_BASE_URL + "/auth", {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ email: cs.email, fullname: cs.fullname }),
       })
         .then((res) => {
           return res.json();
