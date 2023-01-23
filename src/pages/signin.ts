@@ -1,13 +1,10 @@
 import { state } from "../state";
 import { Router } from "@vaadin/router";
-import { nanoid } from "nanoid";
 
 customElements.define(
   "signin-page",
   class extends HTMLElement {
     shadow: ShadowRoot;
-    labelText: string;
-    buttonText: string;
     constructor() {
       super();
       this.shadow = this.attachShadow({ mode: "open" });
@@ -49,9 +46,6 @@ customElements.define(
         // SETEA EL ROOMID
         const selectEl = e.target["room-select"].value;
         const inputRoomidVal = e.target["roomid"].value;
-
-        /* const longRoomId = nanoid();
-        const shortRoomId = longRoomId.slice(16); */
 
         if (selectEl == "existing-room") {
           state.setExistingRoomProp(inputRoomidVal);
@@ -280,6 +274,5 @@ customElements.define(
       this.shadow.appendChild(section);
       this.shadow.appendChild(style);
     }
-    showRoomIdInput() {}
   }
 );

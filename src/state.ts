@@ -1,8 +1,6 @@
 const API_BASE_URL = "http://localhost:3000";
 import { rtdb } from "./rtdb";
 import { map } from "lodash";
-import { Router } from "@vaadin/router";
-import { json } from "body-parser";
 
 const state = {
   data: {
@@ -45,30 +43,6 @@ const state = {
 
     this.setState(cs);
   },
-  /* signUp(callback) {
-    const cs = this.getState();
-
-    if (cs.email) {
-      fetch(API_BASE_URL + "/auth", {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({ email: cs.email }),
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          cs.userId = data.id;
-          this.setState(cs);
-          callback();
-        });
-    } else {
-      console.error("No hay un email en el state");
-      callback(true);
-    }
-  }, */
   signIn(callback) {
     const cs = this.getState();
 
@@ -96,7 +70,7 @@ const state = {
   setExistingRoomProp(roomIdFromInput) {
     const cs = this.getState();
 
-    fetch(API_BASE_URL + "/rooms/" + roomIdFromInput).then((r) => {
+    fetch(API_BASE_URL + "/room/" + roomIdFromInput).then((r) => {
       const contentLength = Number(r.headers.get("content-length"));
       if (contentLength != 0) {
         cs.roomId = roomIdFromInput;
@@ -156,36 +130,6 @@ const state = {
           callback();
         }
       });
-
-    /* if (cs.existingRoom == true) {
-      fetch(API_BASE_URL + "/rooms/" + cs.roomId + "?userId=" + cs.userId)
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          console.log("accessToRoom: ", data);
-          cs.rtdbRoomId = data.rtdbRoomId;
-          this.setState(cs);
-          this.listenToRoom();
-          if (callback) {
-            callback();
-          }
-        });
-    } else if (cs.existingRoom == false) {
-      fetch(API_BASE_URL + "/rooms/" + cs.roomId + "?userId=" + cs.userId)
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          console.log("accessToRoom: ", data);
-          cs.rtdbRoomId = data.rtdbRoomId;
-          this.setState(cs);
-          this.listenToRoom();
-          if (callback) {
-            callback();
-          }
-        });
-    } */
   },
   listenToRoom() {
     const cs = this.getState();
@@ -207,73 +151,9 @@ const state = {
 
     this.setState(cs);
   },
-  /*   getRoom(roomId) {
-    const currentState = this.getState();
-
-    fetch(API_BASE_URL + "/rooms/" + roomId).then((r) => {
-      console.log("getRoom: ", r);
-      const contentLength = Number(r.headers.get("content-length"));
-      if (contentLength != 0) {
-        currentState.existingRoom = true;
-      } else {
-        currentState.existingRoom = false;
-      }
-      this.setState(currentState);
-    });
-  },
-  getMessages(roomId) {
-    const currentState = this.getState();
-    fetch(API_BASE_URL + "/rooms/messages/" + roomId, {
-      method: "get",
-    }).then((messages) => {
-      currentState.prueba = messages;
-      this.setState(currentState);
-    });
-  },
-  setNewRoom(longRoomId, shortRoomId) {
-    const currentState = this.getState();
-    currentState.rtdbRoomId = longRoomId;
-    currentState.roomId = shortRoomId;
-
-    this.setState(currentState);
-
-    fetch(API_BASE_URL + "/rooms", {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        longRoomId: longRoomId,
-        shortRoomId: shortRoomId,
-      }),
-    });
-  },
-  setNewUser(longUserId, shortUserId, EmailFullname: EmailFullnameType) {
-    const currentState = this.getState();
-    currentState.userId = shortUserId;
-    currentState.email = EmailFullname.email;
-    currentState.fullname = EmailFullname.fullname;
-
-    this.setState(currentState);
-
-    fetch(API_BASE_URL + "/users", {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        longUserId: longUserId,
-        shortUserId: shortUserId,
-        userEmail: EmailFullname.email,
-        userFullname: EmailFullname.fullname,
-      }),
-    });
-  }, */
   pushMessage(message: string) {
     const currentState = this.getState();
     const ownerName = currentState.fullname;
-
-    /* currentState.messages.push(message); */
 
     fetch(API_BASE_URL + "/messages", {
       method: "post",
