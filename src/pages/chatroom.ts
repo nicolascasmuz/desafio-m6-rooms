@@ -5,8 +5,7 @@ customElements.define(
   class extends HTMLElement {
     shadow: ShadowRoot;
     roomidText: string;
-    userName: string = "";
-    messages: string[] = [];
+    messages: [] = [];
     constructor() {
       super();
       this.shadow = this.attachShadow({ mode: "open" });
@@ -14,16 +13,13 @@ customElements.define(
       this.render();
       state.signIn((err) => {
         if (err) console.log("Hubo un error en el signIn");
-        state.askNewRoom(() => {
-          state.accessToRoom();
-        });
+        state.askNewRoom();
       });
     }
     addListeners() {
       state.subscribe(() => {
         const currentState = state.getState();
         this.roomidText = currentState.roomId;
-        this.userName = currentState.fullname;
         this.messages = currentState.messages;
         this.render();
       });
@@ -55,11 +51,11 @@ customElements.define(
           <div class="chatroom-div">
             <section class="chat-box__section">
                 ${this.messages
-                  .map((m) => {
-                    if (this.userName == currentState.from) {
-                      return `<div class="user1__message-box"><p class="user1__message-text"><span class="user1__message-span">${this.userName}</span>${m}</p></div>`;
+                  .map((m: any) => {
+                    if (m.from == currentState.fullname) {
+                      return `<div class="user1__message-box"><p class="user1__message-text"><span class="user1__message-span">${m.from}</span>${m.message}</p></div>`;
                     } else {
-                      return `<div class="user2__message-box"><p class="user2__message-text"><span class="user2__message-span">${this.userName}</span>${m}</p></div>`;
+                      return `<div class="user2__message-box"><p class="user2__message-text"><span class="user2__message-span">${m.from}</span>${m.message}</p></div>`;
                     }
                   })
                   .join("")}
