@@ -19,11 +19,24 @@ const state = {
   },
   listeners: [],
   init() {
+    const emptyData = {
+      email: "",
+      fullname: "",
+      userId: "",
+      roomId: "",
+      rtdbRoomId: "",
+      existingRoom: "",
+      messages: [],
+    };
+
     const lastStorageState: any = localStorage.getItem("state");
     if (!lastStorageState) {
       return;
+    } else if (location.pathname == "/chatroom") {
+      this.setState(JSON.parse(lastStorageState));
+    } else if (location.pathname == "/signin" || location.pathname == "/") {
+      this.setState(emptyData);
     }
-    this.setState(JSON.parse(lastStorageState));
   },
   getState() {
     return this.data;
@@ -34,7 +47,7 @@ const state = {
       cb();
     }
 
-    //
+    // save msgs in state
     const chatroomsRef = rtdb.ref("/rooms/" + newState.rtdbRoomId);
     chatroomsRef.on("value", (snapshot) => {
       const messagesFromServer = snapshot.val();
@@ -47,7 +60,6 @@ const state = {
       }
       newState.messages = msgArray;
     });
-    //
 
     localStorage.setItem("state", JSON.stringify(newState));
     console.log("Soy el state, he cambiado: ", this.data);
@@ -104,7 +116,7 @@ const state = {
   askNewRoom(callback?) {
     const cs = this.getState();
 
-    if (cs.userId && cs.existingRoom == false) {
+    if (cs.userId && cs.existingRoom == false && !cs.roomId) {
       fetch(API_BASE_URL + "/rooms", {
         method: "post",
         headers: {
@@ -123,16 +135,10 @@ const state = {
             callback();
           }
         });
-    } else if (cs.userId && cs.existingRoom == true) {
-      /* fetch(API_BASE_URL + "/rooms", {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({ userId: cs.userId }),
-      });
-      this.accessToRoom(); */
-
+    } else if (
+      (cs.userId && cs.existingRoom == true) ||
+      (cs.userId && !cs.existingRoom)
+    ) {
       fetch(API_BASE_URL + "/rooms/" + cs.roomId + "?userId=" + cs.userId)
         .then((res) => {
           return res.json();
@@ -146,22 +152,6 @@ const state = {
       console.error("No hay userId");
     }
   },
-  /* accessToRoom(callback?) {
-    const cs = this.getState();
-
-    fetch(API_BASE_URL + "/rooms/" + cs.roomId + "?userId=" + cs.userId)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        cs.rtdbRoomId = data.rtdbRoomId;
-        this.setState(cs);
-        this.listenToRoom();
-        if (callback) {
-          callback();
-        }
-      });
-  }, */
   listenToRoom() {
     const cs = this.getState();
 

@@ -11,8 +11,11 @@ customElements.define(
       this.shadow = this.attachShadow({ mode: "open" });
       this.addListeners();
       this.render();
-      state.signIn((err) => {
+      /* state.signIn((err) => {
         if (err) console.log("Hubo un error en el signIn");
+        state.askNewRoom();
+      }); */
+      state.signIn(() => {
         state.askNewRoom();
       });
     }
@@ -38,6 +41,11 @@ customElements.define(
           state.pushMessage(message);
         }
       });
+
+      const boxSectionEl = this.shadow.querySelector(
+        ".chat-box__section"
+      ) as HTMLElement;
+      boxSectionEl.scrollTop = boxSectionEl.scrollHeight;
     }
     render() {
       const currentState = state.getState();
@@ -100,8 +108,6 @@ customElements.define(
             .chat-box__section {
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            justify-items: flex-end;
             gap: 6px;
             font-family: 'Roboto';
             width: 312px;
