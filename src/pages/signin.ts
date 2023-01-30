@@ -4,20 +4,16 @@ import { Router } from "@vaadin/router";
 customElements.define(
   "signin-page",
   class extends HTMLElement {
-    shadow: ShadowRoot;
-    constructor() {
-      super();
-      this.shadow = this.attachShadow({ mode: "open" });
-      this.render();
-    }
     connectedCallback() {
+      this.render();
+
       const cs = state.getState();
 
       // DISPLAY DEL ROOM EXISTENTE
-      const selectEl = this.shadow.querySelector(
+      const selectEl = this.querySelector(
         ".signin-form__select-room"
       ) as HTMLSelectElement;
-      const roomExistenteEl = this.shadow.querySelector(
+      const roomExistenteEl = this.querySelector(
         ".signin-form__room-id"
       ) as HTMLElement;
 
@@ -30,9 +26,7 @@ customElements.define(
       });
 
       // LISTENER DEL FORM
-      const formEl = this.shadow.querySelector(
-        ".signin-form__form"
-      ) as HTMLElement;
+      const formEl = this.querySelector(".signin-form__form") as HTMLElement;
       formEl.addEventListener("submit", (e: any) => {
         e.preventDefault();
 
@@ -51,13 +45,13 @@ customElements.define(
         }
 
         // COLOREA EL BORDE DE ROJO Y RUTEA LA PÁGINA
-        const inputEmailEl = this.shadow.querySelector(
+        const inputEmailEl = this.querySelector(
           ".signin-form__input-email"
         ) as HTMLElement;
-        const inputNameEl = this.shadow.querySelector(
+        const inputNameEl = this.querySelector(
           ".signin-form__input-nombre"
         ) as HTMLElement;
-        const existingRoomInput = this.shadow.querySelector(
+        const existingRoomInput = this.querySelector(
           ".signin-form__input-roomid"
         ) as HTMLElement;
 
@@ -124,8 +118,9 @@ customElements.define(
       });
     }
     render() {
-      const section = document.createElement("section");
-      section.innerHTML = `
+      /* const section = document.createElement("section");
+      section */
+      this.innerHTML = `
             <header class="red-header"></header>
             <div class="signin-container">
               <h1 class="signin-title">Bienvenido</h1>
@@ -270,8 +265,8 @@ customElements.define(
             }
             `;
 
-      this.shadow.appendChild(section);
-      this.shadow.appendChild(style);
+      /* this.appendChild(section); */
+      this.appendChild(style);
     }
   }
 );

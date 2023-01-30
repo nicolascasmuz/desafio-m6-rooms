@@ -3,34 +3,16 @@ import { state } from "../state";
 customElements.define(
   "chatroom-page",
   class extends HTMLElement {
-    shadow: ShadowRoot;
     roomidText: string;
     messages: [] = [];
-    constructor() {
-      super();
-      this.shadow = this.attachShadow({ mode: "open" });
-      this.addListeners();
-      this.render();
-      /* state.signIn((err) => {
-        if (err) console.log("Hubo un error en el signIn");
-        state.askNewRoom();
-      }); */
+    connectedCallback() {
       state.signIn(() => {
         state.askNewRoom();
       });
-    }
-    addListeners() {
-      state.subscribe(() => {
-        const currentState = state.getState();
-        this.roomidText = currentState.roomId;
-        this.messages = currentState.messages;
-        this.render();
-      });
-    }
-    connectedCallback() {
-      const formEl = this.shadow.querySelector(
-        ".chatroom-form__form"
-      ) as HTMLElement;
+
+      this.render();
+
+      const formEl = this.querySelector(".chatroom-form__form") as HTMLElement;
 
       formEl.addEventListener("submit", (e: any) => {
         e.preventDefault();
@@ -42,7 +24,7 @@ customElements.define(
         }
       });
 
-      const boxSectionEl = this.shadow.querySelector(
+      const boxSectionEl = this.querySelector(
         ".chat-box__section"
       ) as HTMLElement;
       boxSectionEl.scrollTop = boxSectionEl.scrollHeight;
@@ -50,8 +32,7 @@ customElements.define(
     render() {
       const currentState = state.getState();
 
-      const div = document.createElement("div");
-      div.innerHTML = `
+      this.innerHTML = `
         <header class="red-header"></header>
         <div class="chatroom-container">
           <h1 class="chatroom-title">Chat</h1>
@@ -188,8 +169,7 @@ customElements.define(
             }
               `;
 
-      this.shadow.appendChild(div);
-      this.shadow.appendChild(style);
+      this.appendChild(style);
     }
   }
 );
