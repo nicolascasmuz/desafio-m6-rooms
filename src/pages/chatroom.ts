@@ -5,11 +5,22 @@ customElements.define(
   class extends HTMLElement {
     roomidText: string;
     messages: [] = [];
+    addListeners() {
+      state.subscribe(() => {
+        const currentState = state.getState();
+        this.roomidText = currentState.roomId;
+        this.messages = currentState.messages;
+        this.render();
+      });
+    }
     connectedCallback() {
       state.signIn(() => {
-        state.askNewRoom();
+        state.askNewRoom(() => {
+          state.listenToRoom();
+        });
       });
 
+      this.addListeners();
       this.render();
 
       const formEl = this.querySelector(".chatroom-form__form") as HTMLElement;
