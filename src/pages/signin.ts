@@ -1,3 +1,4 @@
+const API_BASE_URL = "http://localhost:3000";
 import { state } from "../state";
 import { Router } from "@vaadin/router";
 
@@ -30,6 +31,18 @@ customElements.define(
       formEl.addEventListener("submit", (e: any) => {
         e.preventDefault();
 
+        // ELEMENTOS PARA COLOREAR EL BORDE DE ROJO
+        // Y RUTEAR LA PÁGINA
+        const inputEmailEl = this.querySelector(
+          ".signin-form__input-email"
+        ) as HTMLElement;
+        const inputNameEl = this.querySelector(
+          ".signin-form__input-nombre"
+        ) as HTMLElement;
+        const existingRoomInput = this.querySelector(
+          ".signin-form__input-roomid"
+        ) as HTMLElement;
+
         // SETEA EL USER
         const userEmail = e.target["email"].value;
         const userName = e.target["name"].value;
@@ -41,19 +54,20 @@ customElements.define(
         const inputRoomidVal = e.target["roomid"].value;
 
         if (selectEl == "existing-room") {
-          state.setExistingRoomProp(inputRoomidVal);
-        }
+          /* state.setExistingRoomProp(inputRoomidVal); */
 
-        // COLOREA EL BORDE DE ROJO Y RUTEA LA PÁGINA
-        const inputEmailEl = this.querySelector(
-          ".signin-form__input-email"
-        ) as HTMLElement;
-        const inputNameEl = this.querySelector(
-          ".signin-form__input-nombre"
-        ) as HTMLElement;
-        const existingRoomInput = this.querySelector(
-          ".signin-form__input-roomid"
-        ) as HTMLElement;
+          fetch(API_BASE_URL + "/room/" + inputRoomidVal).then((r) => {
+            const contentLength = Number(r.headers.get("content-length"));
+            if (contentLength != 0 && userEmail != "" && userName != "") {
+              Router.go("/chatroom");
+              cs.roomId = inputRoomidVal;
+              cs.existingRoom = true;
+            } else if (contentLength == 0) {
+              existingRoomInput.style.border = "solid 2px red";
+              cs.existingRoom = false;
+            }
+          });
+        }
 
         if (userEmail == "" && userName == "") {
           inputEmailEl.style.border = "solid 2px red";
@@ -100,26 +114,12 @@ customElements.define(
           existingRoomInput.style.border = "solid 2px red";
           inputEmailEl.style.border = "solid 2px #8c8c8c";
           inputNameEl.style.border = "solid 2px #8c8c8c";
-        } else if (
-          selectEl == "existing-room" &&
-          inputRoomidVal.length == 5 &&
-          userEmail != "" &&
-          userName != "" &&
-          cs.existingRoom == false
-        ) {
-          existingRoomInput.style.border = "solid 2px red";
-          inputEmailEl.style.border = "solid 2px #8c8c8c";
-          inputNameEl.style.border = "solid 2px #8c8c8c";
-        } else if (cs.existingRoom == true) {
-          Router.go("/chatroom");
         } else if (selectEl == "new-room") {
           Router.go("/chatroom");
         }
       });
     }
     render() {
-      /* const section = document.createElement("section");
-      section */
       this.innerHTML = `
             <header class="red-header"></header>
             <div class="signin-container">
@@ -265,7 +265,6 @@ customElements.define(
             }
             `;
 
-      /* this.appendChild(section); */
       this.appendChild(style);
     }
   }

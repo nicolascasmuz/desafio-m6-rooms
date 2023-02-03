@@ -14,7 +14,7 @@ const state = {
     userId: "",
     roomId: "",
     rtdbRoomId: "",
-    existingRoom: "",
+    existingRoom: false,
     messages: [],
   },
   listeners: [],
@@ -99,7 +99,7 @@ const state = {
       callback(true);
     }
   },
-  setExistingRoomProp(roomIdFromInput) {
+  /* setExistingRoomProp(roomIdFromInput) {
     const cs = this.getState();
 
     fetch(API_BASE_URL + "/room/" + roomIdFromInput).then((r) => {
@@ -112,7 +112,7 @@ const state = {
       }
       this.setState(cs);
     });
-  },
+  }, */
   askNewRoom(callback?) {
     const cs = this.getState();
 
@@ -137,7 +137,7 @@ const state = {
         });
     } else if (
       (cs.userId && cs.existingRoom == true) ||
-      (cs.userId && !cs.existingRoom)
+      (cs.userId && cs.existingRoom == false)
     ) {
       fetch(API_BASE_URL + "/rooms/" + cs.roomId + "?userId=" + cs.userId)
         .then((res) => {
