@@ -5,40 +5,24 @@ customElements.define(
   class extends HTMLElement {
     roomidText: string;
     messages: [] = [];
-    addListeners() {
+
+    connectedCallback() {
       state.subscribe(() => {
         const currentState = state.getState();
         this.roomidText = currentState.roomId;
         this.messages = currentState.messages;
         this.render();
+        this.addListeners();
       });
-    }
-    connectedCallback() {
+
       state.signIn(() => {
         state.askNewRoom(() => {
           state.listenToRoom();
         });
       });
 
-      this.addListeners();
       this.render();
-
-      const formEl = this.querySelector(".chatroom-form__form") as HTMLElement;
-
-      formEl.addEventListener("submit", (e: any) => {
-        e.preventDefault();
-        const message = e.target["new-message"].value;
-        if (message == "") {
-          null;
-        } else {
-          state.pushMessage(message);
-        }
-      });
-
-      const boxSectionEl = this.querySelector(
-        ".chat-box__section"
-      ) as HTMLElement;
-      boxSectionEl.scrollTop = boxSectionEl.scrollHeight;
+      this.addListeners();
     }
     render() {
       const currentState = state.getState();
@@ -181,6 +165,24 @@ customElements.define(
               `;
 
       this.appendChild(style);
+    }
+    addListeners() {
+      const boxSectionEl = this.querySelector(
+        ".chat-box__section"
+      ) as HTMLElement;
+      boxSectionEl.scrollTop = boxSectionEl.scrollHeight;
+
+      const formEl = this.querySelector(".chatroom-form__form") as HTMLElement;
+
+      formEl.addEventListener("submit", (e: any) => {
+        e.preventDefault();
+        const message = e.target["new-message"].value;
+        if (message == "") {
+          null;
+        } else {
+          state.pushMessage(message);
+        }
+      });
     }
   }
 );
